@@ -26,11 +26,12 @@ export const authConfig: NextAuthConfig = {
       // } else if (isLoggedIn) {
       //   return Response.redirect(new URL('/dashboard', nextUrl));
       // }
+      //comentario
       return true;
     },
 
     jwt({ token, user }) {
-      if ( user ) {
+      if (user) {
         token.data = user;
       }
 
@@ -58,23 +59,23 @@ export const authConfig: NextAuthConfig = {
           .safeParse(credentials);
 
 
-          if ( !parsedCredentials.success ) return null;
+        if (!parsedCredentials.success) return null;
 
-          const { email, password } = parsedCredentials.data;
-
-
-          // Buscar el correo
-          const user = await prisma.user.findUnique({ where: { email: email.toLowerCase() } });
-          if ( !user ) return null;
-
-          // Comparar las contraseñas
-          if( !bcryptjs.compareSync( password, user.password ) ) return null;
+        const { email, password } = parsedCredentials.data;
 
 
-          // Regresar el usuario sin el password
-          const { password: _, ...rest } = user;
+        // Buscar el correo
+        const user = await prisma.user.findUnique({ where: { email: email.toLowerCase() } });
+        if (!user) return null;
 
-          return rest;
+        // Comparar las contraseñas
+        if (!bcryptjs.compareSync(password, user.password)) return null;
+
+
+        // Regresar el usuario sin el password
+        const { password: _, ...rest } = user;
+
+        return rest;
       },
     }),
 
@@ -84,4 +85,4 @@ export const authConfig: NextAuthConfig = {
 
 
 
-export const {  signIn, signOut, auth, handlers } = NextAuth( authConfig );
+export const { signIn, signOut, auth, handlers } = NextAuth(authConfig);
